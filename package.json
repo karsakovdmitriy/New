@@ -18,7 +18,10 @@
     "react-dom": "latest",
     "tailwind-merge": "latest",
     "tailwindcss-animate": "latest",
-    "clsx": "latest"
+    "clsx": "latest",
+    "date-fns": "latest",
+    "class-variance-authority": "latest",
+    "@radix-ui/react-slot": "latest"
   },
   "devDependencies": {
     "@types/node": "latest",

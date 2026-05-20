@@ -119,3 +119,39 @@ returns bigint as $$
   select count(*) from public.bookings
   where bookings.slot_id = $1 and status = 'active';
 $$ language sql security definer;
+
+-- Trigger to create profile on auth signup
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, email, full_name, role)
+  values (new.id, new.email, new.raw_user_meta_data->>'full_name', coalesce((new.raw_user_meta_data->>'role')::user_role, 'client'::user_role));
+  return new;
+end;
+$$ language plpgsql security definer;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
+-- Booking validation logic (capacity check)
+create or replace function public.check_slot_capacity()
+returns trigger as $$
+declare
+  v_capacity int;
+  v_occupancy bigint;
+begin
+  select capacity into v_capacity from public.slots where id = new.slot_id;
+  select count(*) into v_occupancy from public.bookings where slot_id = new.slot_id and status = 'active';
+
+  if v_occupancy >= v_capacity then
+    raise exception 'Этот слот уже полностью заполнен';
+  end if;
+
+  return new;
+end;
+$$ language plpgsql;
+
+create trigger before_booking_insert
+  before insert on public.bookings
+  for each row execute procedure public.check_slot_capacity();
