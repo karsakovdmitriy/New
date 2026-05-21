@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports MVP - Debug Version</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="login-screen" class="screen">
+            <h1>Вход</h1>
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Пароль">
+            <button onclick="handleLogin()">Войти</button>
+            <button onclick="handleSignUp()">Регистрация</button>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen" class="screen hidden">
+            <header>
+                <h1 id="user-welcome">Привет!</h1>
+                <button onclick="handleLogout()">Выйти</button>
+            </header>
+
+            <div class="tabs">
+                <button onclick="showTab('trainer')">Я тренер</button>
+                <button onclick="showTab('client')">Я клиент</button>
+            </div>
+
+            <!-- Trainer Tab -->
+            <div id="trainer-tab" class="tab-content hidden">
+                <h2>Мои тренировки</h2>
+                <div id="trainer-workouts"></div>
+                <div class="form">
+                    <h3>Создать тренировку</h3>
+                    <input type="text" id="workout-title" placeholder="Название">
+                    <input type="number" id="workout-price" placeholder="Цена">
+                    <button onclick="createWorkout()">Создать</button>
+                </div>
+            </div>
+
+            <!-- Client Tab -->
+            <div id="client-tab" class="tab-content hidden">
+                <h2>Доступные тренировки</h2>
+                <div id="client-workouts"></div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
